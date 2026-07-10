@@ -288,6 +288,24 @@
         @media (max-width: 600px) {
             .header-title { font-size: 1.3rem; }
         }
+
+        .credits {
+            text-align: center;
+            padding: 14px 10px 6px;
+            font-size: 0.85rem;
+            color: #666;
+            margin-top: 18px;
+            border-top: 1px solid #e2e8f0;
+            line-height: 1.7;
+        }
+        body.black-theme .credits {
+            color: #aaa;
+            border-top-color: #333;
+        }
+        .credits strong {
+            color: #e67e22;
+            font-weight: 700;
+        }
     </style>
 </head>
 <body>
@@ -302,6 +320,11 @@
     <div class="safety-grid" id="safetyGrid"></div>
     <div id="safetyDetail" class="safety-detail"></div>
     <button class="back-btn" id="backToMenuBtn" style="display:none;">📋 بازگشت به منوی TBM</button>
+
+    <!-- ===== CREDITS ===== -->
+    <div class="credits">
+        تهیه شده توسط <strong>مهندس فرشید نگهداری</strong> و <strong>مهندس حسین زارعی</strong>
+    </div>
 </div>
 <div class="tbm-toast" id="tbmToast"></div>
 
@@ -997,8 +1020,5 @@ settingsBtn.onclick = () => {
 applyTheme(localStorage.getItem('theme') || 'white', localStorage.getItem('textColor') || 'default', localStorage.getItem('fontSize') || 'normal');
 </script>
 <script src="hse-common.js"></script>
-
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a178fcb0aa5d6fc9',t:'MTc4MzQ0OTcyNQ=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script>
-<div style="text-align:center;padding:15px;font-size:0.85rem;color:#666;border-top:1px solid #eee;margin-top:20px;">تهیه شده توسط <strong>مهندس فرشید نگهداری</strong> و <strong>مهندس حسین زارعی</strong></div>
 </body>
 </html>
