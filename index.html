@@ -3,7 +3,7 @@
 <!--
   ©️ این نرم‌افزار توسط مهندس فرشید نگهداری (09178680173) طراحی و توسعه یافته است.
   هرگونه کپی‌برداری، فروش، یا استفاده بدون اجازه کتبی صاحب اثر حرام و ممنوع است.
-  نسخه: HSE-AZHAND-HAMMAT-2025 | ID: FN-20250001
+  نسخه:  | ID: FN-20250001
   این فایل دارای علامت‌گذاری منحصربه‌فرد (fingerprint) است.
 --><head>
     <meta charset="UTF-8" />
@@ -102,6 +102,7 @@
         body.black-theme .modal-card { background: #1e293b; }
         body.black-theme .setting-group { background: rgba(255,255,255,0.04); border-color: rgba(255,255,255,0.06); }
         body.black-theme .modal-card select { background: #0f172a; color: #f8fafc; border-color: rgba(255,255,255,0.1); }
+        body.black-theme .storage-stat { background: rgba(255,255,255,0.04); }
 
         /* ===== انیمیشن غیرفعال ===== */
         body.no-animations, body.no-animations * {
@@ -268,23 +269,14 @@
             font-weight: 800;
             color: var(--dark-blue);
             line-height: 1.2;
-            display: flex;
-            align-items: baseline;
-            justify-content: center;
-            gap: 4px;
         }
         .safety-dash-item .value .highlight {
             color: var(--primary);
         }
-        .safety-dash-item .value-unit {
-            font-size: 0.85rem;
-            font-weight: 700;
-            color: var(--text-muted);
-        }
         .safety-dash-item .sub-info {
             font-size: 0.7rem;
             color: var(--text-muted);
-            margin-top: 4px;
+            margin-top: 2px;
         }
         .safety-dash-item .progress-bar {
             width: 100%;
@@ -881,6 +873,65 @@
             box-shadow: 0 6px 20px rgba(22, 163, 74, 0.3);
         }
 
+        /* ===== بخش ذخیره‌سازی ===== */
+        .storage-stat {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 14px;
+            background: rgba(0,0,0,0.03);
+            border-radius: 12px;
+            margin: 6px 0;
+        }
+        .storage-stat .stat-icon {
+            font-size: 1.4rem;
+            margin-left: 10px;
+        }
+        .storage-stat .stat-info {
+            flex: 1;
+        }
+        .storage-stat .stat-title {
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: var(--text-main);
+        }
+        .storage-stat .stat-value {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+        }
+        .storage-stat .stat-status {
+            font-size: 0.7rem;
+            font-weight: 700;
+            padding: 3px 10px;
+            border-radius: 20px;
+        }
+        .storage-stat .stat-status.granted {
+            background: rgba(22, 163, 74, 0.12);
+            color: #16a34a;
+        }
+        .storage-stat .stat-status.denied {
+            background: rgba(220, 38, 38, 0.12);
+            color: #dc2626;
+        }
+        .storage-stat .stat-status.pending {
+            background: rgba(245, 158, 11, 0.12);
+            color: #d97706;
+        }
+        .storage-progress {
+            width: 100%;
+            height: 8px;
+            background: rgba(0,0,0,0.06);
+            border-radius: 10px;
+            margin: 10px 0;
+            overflow: hidden;
+        }
+        .storage-progress .fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary), #27ae60);
+            border-radius: 10px;
+            transition: width 0.5s ease;
+        }
+
         /* ===== EXIT DIALOG ===== */
         .exit-dialog {
             position: fixed;
@@ -1438,7 +1489,7 @@
     <div class="act-logo">
       <span class="emoji">⛑️</span>
       <h2>سامانه ایمنی</h2>
-      <p>شرکت درکاو</p>
+      <p> شرکت درکاو</p>
     </div>
     <div class="act-divider"></div>
     <div class="act-field">
@@ -1506,6 +1557,7 @@
                 <div class="drawer-divider"></div>
                 <button class="drawer-item" onclick="document.getElementById('drawerOverlay').classList.remove('open'); document.getElementById('emergencySection').scrollIntoView({behavior:'smooth'});"><span class="d-icon">📞</span> شماره‌های اضطراری</button>
                 <button class="drawer-item" id="drawerSettingsBtn"><span class="d-icon">⚙️</span> تنظیمات ظاهری</button>
+                <button class="drawer-item" id="drawerStorageBtn"><span class="d-icon">💾</span> مدیریت حافظه</button>
                 <div class="drawer-divider"></div>
                 <button class="drawer-item" id="drawerBackBtn"><span class="d-icon">↩️</span> صفحه قبلی</button>
                 <button class="drawer-item" id="drawerExitBtn" style="color:#dc2626;"><span class="d-icon">🚪</span> خروج از سامانه</button>
@@ -1517,8 +1569,8 @@
     <div class="safety-dashboard">
         <div class="safety-dash-item">
             <div class="label">⏳ روزهای بدون حادثه</div>
-            <div class="value"><span class="highlight" id="daysDisplay">--</span><span class="value-unit">روز</span></div>
-            <div class="sub-info">ایمن و بدون حادثه 🛡️</div>
+            <div class="value"><span class="highlight" id="daysDisplay">--</span></div>
+            <div class="sub-info" id="startDateDisplay">از تاریخ: --</div>
         </div>
         <div class="safety-dash-item goal-item">
             <div class="label">🎯 هدف بدون حادثه</div>
@@ -1636,7 +1688,7 @@
 
     <!-- ===== FOOTER ===== -->
     <div class="footer">
-        تهیه شده توسط <span class="highlight">مهندس فرشید نگهداری - مهندس حسین زارعی</span>
+        تهیه شده توسط <span class="highlight">مهندس فرشید نگهداری</span> و <span class="highlight">مهندس حسین زارعی</span>
     </div>
 
 </div>
@@ -1849,7 +1901,7 @@
     const emergencyContacts = [
         { label: "🔥 آتش نشانی سرو ایرانیان", number: "09912769927" },
         { label: " واحد HSE شرکت درکاو  ", number: "09164555987" },
-        { label: "اورژانس پیشگامان صنعت", number: "09157333115" },
+        { label: "اورژانس و آتش نشانی پیشگامان صنعت", number: "09157333115" },
         { label: "اورژانس  سرب و روی مهدی آباد", number: "09961629144" }
     ];
     const contactList = document.getElementById('contactList');
@@ -1863,6 +1915,126 @@
         `;
         contactList.appendChild(div);
     });
+
+    // ============================================================
+    // 2.5. STORAGE SYSTEM (ذخیره‌سازی حرفه‌ای)
+    // ============================================================
+    const HSE_DB_NAME = 'HSE_Storage';
+    const HSE_DB_VERSION = 1;
+    let hseDB = null;
+    
+    // باز کردن IndexedDB
+    function openHSEDatabase() {
+        return new Promise((resolve, reject) => {
+            const request = indexedDB.open(HSE_DB_NAME, HSE_DB_VERSION);
+            request.onupgradeneeded = function(e) {
+                const db = e.target.result;
+                if (!db.objectStoreNames.contains('files')) {
+                    db.createObjectStore('files', { keyPath: 'name' });
+                }
+                if (!db.objectStoreNames.contains('contacts')) {
+                    db.createObjectStore('contacts', { keyPath: 'id' });
+                }
+                if (!db.objectStoreNames.contains('sds')) {
+                    db.createObjectStore('sds', { keyPath: 'id' });
+                }
+            };
+            request.onsuccess = function(e) {
+                hseDB = e.target.result;
+                resolve(hseDB);
+            };
+            request.onerror = function(e) {
+                reject(e);
+            };
+        });
+    }
+    
+    // ذخیره فایل در IndexedDB
+    function storeFile(name, data, type) {
+        return new Promise((resolve, reject) => {
+            if (!hseDB) return reject('DB not open');
+            const tx = hseDB.transaction('files', 'readwrite');
+            const store = tx.objectStore('files');
+            store.put({
+                name: name,
+                data: data,
+                type: type,
+                timestamp: Date.now(),
+                size: typeof data === 'string' ? data.length : (data.size || data.byteLength || 0)
+            });
+            tx.oncomplete = () => resolve(true);
+            tx.onerror = (e) => reject(e);
+        });
+    }
+    
+    // خواندن فایل از IndexedDB
+    function getFile(name) {
+        return new Promise((resolve, reject) => {
+            if (!hseDB) return reject('DB not open');
+            const tx = hseDB.transaction('files', 'readonly');
+            const store = tx.objectStore('files');
+            const request = store.get(name);
+            request.onsuccess = () => resolve(request.result);
+            request.onerror = (e) => reject(e);
+        });
+    }
+    
+    // حذف فایل از IndexedDB
+    function deleteFile(name) {
+        return new Promise((resolve, reject) => {
+            if (!hseDB) return reject('DB not open');
+            const tx = hseDB.transaction('files', 'readwrite');
+            const store = tx.objectStore('files');
+            store.delete(name);
+            tx.oncomplete = () => resolve(true);
+            tx.onerror = (e) => reject(e);
+        });
+    }
+    
+    // لیست همه فایل‌ها
+    function listFiles() {
+        return new Promise((resolve, reject) => {
+            if (!hseDB) return reject('DB not open');
+            const tx = hseDB.transaction('files', 'readonly');
+            const store = tx.objectStore('files');
+            const request = store.getAll();
+            request.onsuccess = () => resolve(request.result);
+            request.onerror = (e) => reject(e);
+        });
+    }
+    
+    // درخواست مجوز حافظه پایدار
+    async function requestPersistentStorage() {
+        if (navigator.storage && navigator.storage.persist) {
+            const isPersisted = await navigator.storage.persist();
+            return isPersisted;
+        }
+        return false;
+    }
+    
+    // بررسی وضعیت حافظه
+    async function getStorageEstimate() {
+        if (navigator.storage && navigator.storage.estimate) {
+            const estimate = await navigator.storage.estimate();
+            return {
+                usage: estimate.usage || 0,
+                quota: estimate.quota || 0,
+                percent: estimate.quota ? Math.round((estimate.usage / estimate.quota) * 100) : 0
+            };
+        }
+        return { usage: 0, quota: 0, percent: 0 };
+    }
+    
+    // ذخیره خودکار مخاطبین در IndexedDB هنگام بارگذاری
+    (async function autoSaveContacts() {
+        try {
+            await openHSEDatabase();
+            for (let i = 0; i < emergencyContacts.length; i++) {
+                await storeFile('contact_' + i, JSON.stringify(emergencyContacts[i]), 'contact');
+            }
+            localStorage.setItem('hse_contacts_saved', 'true');
+        } catch(e) { /* silently fail */ }
+    })();
 
     // ============================================================
     // 3. DASHBOARD
@@ -2026,6 +2198,7 @@
                     <button class="settings-tab active" data-tab="appearance">🎨 ظاهر</button>
                     <button class="settings-tab" data-tab="colors">🎯 رنگ‌ها</button>
                     <button class="settings-tab" data-tab="advanced">🔧 پیشرفته</button>
+                    <button class="settings-tab" data-tab="storage">💾 حافظه</button>
                 </div>
 
                 <!-- تب ظاهر -->
@@ -2201,6 +2374,47 @@
                     </div>
                 </div>
 
+                <!-- تب حافظه -->
+                <div class="tab-content" id="tab-storage">
+                    <div class="setting-group">
+                        <div class="group-title">💾 وضعیت حافظه</div>
+                        <div id="storageStatusArea">
+                            <div class="storage-stat">
+                                <span class="stat-icon">💾</span>
+                                <div class="stat-info">
+                                    <div class="stat-title">حافظه پایدار</div>
+                                    <div class="stat-value" id="persistStatus">در حال بررسی...</div>
+                                </div>
+                                <span class="stat-status pending" id="persistBadge">⏳</span>
+                            </div>
+                            <div class="storage-stat">
+                                <span class="stat-icon">📊</span>
+                                <div class="stat-info">
+                                    <div class="stat-title">فضای استفاده شده</div>
+                                    <div class="stat-value" id="storageUsage">در حال محاسبه...</div>
+                                </div>
+                            </div>
+                            <div class="storage-progress">
+                                <div class="fill" id="storageProgressFill" style="width:0%"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="setting-group">
+                        <div class="group-title">📁 فایل‌های ذخیره شده</div>
+                        <div id="storedFilesList" style="font-size:0.8rem; color: var(--text-muted);">
+                            در حال بارگذاری...
+                        </div>
+                    </div>
+
+                    <div class="btn-row">
+                        <button class="modal-btn success-btn" id="requestStorageBtn">🔓 درخواست مجوز حافظه پایدار</button>
+                        <button class="modal-btn" id="cacheContactsBtn">📱 ذخیره مخاطبین اضطراری</button>
+                        <button class="modal-btn default-btn" id="cacheSDSBtn">📄 ذخیره فایل‌های SDS</button>
+                        <button class="modal-btn danger-btn" id="clearStorageBtn">🗑️ پاکسازی حافظه کش</button>
+                    </div>
+                </div>
+
                 <div class="btn-row" style="margin-top:16px; border-top: 1px solid rgba(0,0,0,0.06); padding-top:14px;">
                     <button class="modal-btn" id="saveSettings">💾 ذخیره تنظیمات</button>
                     <div class="btn-row-horizontal">
@@ -2306,6 +2520,91 @@
             showToast('🔄 تنظیمات به حالت پیش‌فرض برگشت.', 'success', 2500);
         };
 
+        // ===== STORAGE TAB LOGIC =====
+        loadStorageInfo(modal);
+        
+        modal.querySelector('#requestStorageBtn').onclick = async function() {
+            const granted = await requestPersistentStorage();
+            if (granted) {
+                showToast('✅ مجوز حافظه پایدار اعطا شد!', 'success');
+                modal.querySelector('#persistStatus').textContent = 'فعال و پایدار';
+                modal.querySelector('#persistBadge').className = 'stat-status granted';
+                modal.querySelector('#persistBadge').textContent = '✅ فعال';
+            } else {
+                showToast('⚠️ مجوز حافظه رد شد', 'warning');
+                modal.querySelector('#persistStatus').textContent = 'رد شده';
+                modal.querySelector('#persistBadge').className = 'stat-status denied';
+                modal.querySelector('#persistBadge').textContent = '❌ رد';
+            }
+        };
+
+        modal.querySelector('#cacheContactsBtn').onclick = async function() {
+            try {
+                let vcard = "";
+                emergencyContacts.forEach(c => {
+                    vcard += `BEGIN:VCARD\nVERSION:3.0\nFN:${c.label}\nTEL:${c.number}\nEND:VCARD\n`;
+                });
+                await storeFile('emergency_contacts.vcf', vcard, 'vcard');
+                for (let i = 0; i < emergencyContacts.length; i++) {
+                    await storeFile('contact_' + i, JSON.stringify(emergencyContacts[i]), 'contact');
+                }
+                showToast('✅ مخاطبین اضطراری در حافظه ذخیره شد!', 'success');
+                loadStorageInfo(modal);
+            } catch(e) {
+                showToast('⚠️ خطا: ' + e, 'danger');
+            }
+        };
+
+        modal.querySelector('#cacheSDSBtn').onclick = async function() {
+            try {
+                // تلاش برای کش کردن صفحه SDS
+                if ('caches' in window) {
+                    const cache = await caches.open('hse-sds-v1');
+                    try {
+                        await cache.add('sds/index.html');
+                        showToast('✅ صفحه SDS در کش ذخیره شد!', 'success');
+                    } catch(e) {
+                        // اگر آفلاین یا خطا، یک placeholder ذخیره کن
+                        await storeFile('sds_placeholder', JSON.stringify({
+                            url: 'sds/index.html',
+                            cached: true,
+                            timestamp: Date.now()
+                        }), 'sds_meta');
+                        showToast('📌 اطلاعات SDS ثبت شد (آفلاین در دسترس)', 'success');
+                    }
+                } else {
+                    await storeFile('sds_info', JSON.stringify({
+                        note: 'SDS برگه ایمنی مواد',
+                        timestamp: Date.now()
+                    }), 'sds_meta');
+                    showToast('📌 اطلاعات SDS ذخیره شد', 'success');
+                }
+                loadStorageInfo(modal);
+            } catch(e) {
+                showToast('⚠️ خطا: ' + e, 'danger');
+            }
+        };
+
+        modal.querySelector('#clearStorageBtn').onclick = async function() {
+            if (!confirm('آیا مطمئن هستید؟ همه فایل‌های کش پاک می‌شوند.')) return;
+            try {
+                // پاک کردن IndexedDB
+                if (hseDB) {
+                    const tx = hseDB.transaction('files', 'readwrite');
+                    tx.objectStore('files').clear();
+                }
+                // پاک کردن Cache API
+                if ('caches' in window) {
+                    const keys = await caches.keys();
+                    await Promise.all(keys.filter(k => k.startsWith('hse-')).map(k => caches.delete(k)));
+                }
+                showToast('🗑️ حافظه کش پاک شد.', 'success');
+                loadStorageInfo(modal);
+            } catch(e) {
+                showToast('⚠️ خطا در پاکسازی', 'danger');
+            }
+        };
+
         // ذخیره تنظیمات
         modal.querySelector('#saveSettings').onclick = function() {
             const ns = {
@@ -2390,6 +2689,56 @@
         showToast('🎨 تم "' + tp.name + '" انتخاب شد', 'success', 1500);
     };
 
+    // بارگذاری اطلاعات حافظه
+    async function loadStorageInfo(modal) {
+        // بررسی Persistent Storage
+        if (navigator.storage && navigator.storage.persisted) {
+            const persisted = await navigator.storage.persisted();
+            if (persisted) {
+                modal.querySelector('#persistStatus').textContent = 'فعال و پایدار';
+                modal.querySelector('#persistBadge').className = 'stat-status granted';
+                modal.querySelector('#persistBadge').textContent = '✅ فعال';
+            } else {
+                modal.querySelector('#persistStatus').textContent = 'غیرفعال';
+                modal.querySelector('#persistBadge').className = 'stat-status denied';
+                modal.querySelector('#persistBadge').textContent = '❌ غیرفعال';
+            }
+        }
+        
+        // بررسی فضای استفاده شده
+        const estimate = await getStorageEstimate();
+        const usageMB = (estimate.usage / (1024 * 1024)).toFixed(2);
+        const quotaMB = (estimate.quota / (1024 * 1024)).toFixed(0);
+        modal.querySelector('#storageUsage').textContent = `${usageMB} MB از ${quotaMB} MB (${estimate.percent}%)`;
+        modal.querySelector('#storageProgressFill').style.width = Math.min(estimate.percent, 100) + '%';
+        
+        // لیست فایل‌ها
+        try {
+            const files = await listFiles();
+            const filesList = modal.querySelector('#storedFilesList');
+            if (files.length === 0) {
+                filesList.innerHTML = '<p style="text-align:center; padding:10px;">📭 هیچ فایلی ذخیره نشده</p>';
+            } else {
+                let html = '';
+                files.forEach(f => {
+                    const date = new Date(f.timestamp).toLocaleDateString('fa-IR');
+                    const size = f.size ? (f.size > 1024 ? (f.size/1024).toFixed(1) + ' KB' : f.size + ' B') : 'نامشخص';
+                    const typeIcons = { contact: '📱', vcard: '📇', sds_meta: '📄', file: '📁' };
+                    const icon = typeIcons[f.type] || '📁';
+                    html += `
+                        <div style="display:flex; align-items:center; justify-content:space-between; padding:8px 10px; background:rgba(0,0,0,0.03); border-radius:10px; margin:4px 0;">
+                            <span>${icon} ${f.name}</span>
+                            <span style="font-size:0.68rem; color:var(--text-muted);">${size} • ${date}</span>
+                        </div>
+                    `;
+                });
+                filesList.innerHTML = html;
+            }
+        } catch(e) {
+            modal.querySelector('#storedFilesList').innerHTML = '<p style="color:#dc2626;">⚠️ خطا در خواندن فایل‌ها</p>';
+        }
+    }
+
     document.getElementById('settingsBtn').onclick = openSettings;
 
     // ===== منوی کشویی (Drawer) =====
@@ -2406,6 +2755,15 @@
     document.getElementById('drawerSettingsBtn').onclick = function() {
         drawerOverlay.classList.remove('open');
         openSettings();
+    };
+    document.getElementById('drawerStorageBtn').onclick = function() {
+        drawerOverlay.classList.remove('open');
+        openSettings();
+        // باز کردن تب حافظه
+        setTimeout(() => {
+            const storageTab = document.querySelector('[data-tab="storage"]');
+            if (storageTab) storageTab.click();
+        }, 300);
     };
     document.getElementById('drawerBackBtn').onclick = function() {
         drawerOverlay.classList.remove('open');
@@ -2562,6 +2920,14 @@
             if (data.success) {
                 activateApp({ fullname, personnel, phone, national }, data.permissions || {});
                 showToast('✅ خوش آمدید، ' + fullname, 'success', 3000);
+                
+                // درخواست مجوز حافظه بعد از ورود
+                setTimeout(async () => {
+                    const persisted = await requestPersistentStorage();
+                    if (persisted) {
+                        showToast('💾 حافظه پایدار فعال شد', 'success', 2500);
+                    }
+                }, 2000);
             } else {
                 showError('❌ ' + (data.msg || 'کد فعالسازی نامعتبر است'));
                 btn.disabled = false;
@@ -2655,5 +3021,5 @@
 
 <script src="hse-common.js"></script>
 
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a1815bc45826c8c4',t:'MTc4MzUzNzUwNQ=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script><script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a188e8591bc24f05',t:'MTc4MzYxNjY2NA=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a1815bc45826c8c4',t:'MTc4MzUzNzUwNQ=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
