@@ -21,7 +21,7 @@ body {
 .container {
     background: white;
     border-radius: 48px;
-    padding: 30px 25px;
+    padding: 30px 25px 20px;
     box-shadow: 0 25px 45px rgba(0,0,0,0.2);
     max-width: 600px;
     width: 100%;
@@ -45,7 +45,7 @@ h1 span { color: #f39c12; }
     position: relative;
     width: 280px;
     height: 280px;
-    margin: 0 auto 10px;
+    margin: 0 auto 40px;
 }
 
 svg {
@@ -67,6 +67,7 @@ svg {
     outline: none;
     background: rgba(0,0,0,0.1);
     appearance: none;
+    -webkit-appearance: none;
     cursor: pointer;
     font-family: inherit;
     direction: ltr;
@@ -130,17 +131,16 @@ svg {
 /* ===== متن راهنمای داخل لوزی ===== */
 .diamond-hint {
     position: absolute;
-    bottom: -30px;
+    bottom: -32px;
     left: 50%;
     transform: translateX(-50%);
     font-size: 0.7rem;
-    color: rgba(255,255,255,0.7);
-    background: rgba(0,0,0,0.4);
-    padding: 3px 12px;
+    color: #555;
+    background: rgba(30, 60, 76, 0.08);
+    padding: 4px 12px;
     border-radius: 20px;
     white-space: nowrap;
     pointer-events: none;
-    backdrop-filter: blur(2px);
 }
 
 /* ===== دکمه تحلیل ===== */
@@ -155,7 +155,7 @@ svg {
     cursor: pointer;
     width: 100%;
     transition: 0.2s;
-    margin-top: 30px;
+    margin-top: 10px;
 }
 .analyze-btn:active { transform: scale(0.97); }
 .analyze-btn:hover { background: #2c5a6e; }
@@ -249,9 +249,23 @@ svg {
 .color-yellow { background: #f4d03f; }
 .color-white { background: #ddd; border: 1px solid #999; }
 
+/* ===== فوتر اعتبار ===== */
+.credit-footer {
+    text-align: center;
+    padding: 14px 8px 4px;
+    font-size: 0.85rem;
+    color: #666;
+    border-top: 1px solid #eee;
+    margin-top: 20px;
+    line-height: 1.6;
+}
+.credit-footer strong {
+    color: #1e3c4c;
+}
+
 @media (max-width: 480px) {
-    .container { padding: 15px; }
-    .diamond-wrapper { width: 220px; height: 220px; }
+    .container { padding: 15px 15px 12px; }
+    .diamond-wrapper { width: 220px; height: 220px; margin-bottom: 36px; }
     .diamond-number { font-size: 26px; width: 48px; height: 44px; line-height: 44px; }
     #fire { margin-top: -35px; }
     #health { margin-left: -35px; }
@@ -260,7 +274,8 @@ svg {
     h1 { font-size: 1.2rem; }
     .result-badge { min-width: 60px; font-size: 0.75rem; }
     .result-desc { font-size: 0.8rem; }
-    .diamond-hint { font-size: 0.6rem; bottom: -25px; padding: 2px 10px; }
+    .diamond-hint { font-size: 0.6rem; bottom: -28px; padding: 2px 10px; }
+    .credit-footer { font-size: 0.75rem; }
 }
 </style>
 </head>
@@ -336,6 +351,11 @@ svg {
                 <td>—</td>
                 <td>W = واکنش با آب · OX = اکسیدکننده · SA = گاز اختناق‌آور · COR = خورنده · BIO = خطر زیستی · POI = سمی · RAD = رادیواکتیو · CRYO = بسیار سرد</td></tr>
         </table>
+    </div>
+
+    <!-- ===== فوتر اعتبار (داخل باکس) ===== -->
+    <div class="credit-footer">
+        تهیه شده توسط <strong>مهندس فرشید نگهداری</strong> و <strong>مهندس حسین زارعی</strong>
     </div>
 </div>
 
@@ -466,7 +486,5 @@ legendToggle.addEventListener('click', () => {
 
 <script src="hse-common.js"></script>
 
-
-<div style="text-align:center;padding:15px;font-size:0.85rem;color:#666;border-top:1px solid #eee;margin-top:20px;">تهیه شده توسط <strong>مهندس فرشید نگهداری</strong> و <strong>مهندس حسین زارعی</strong></div>
 </body>
 </html>
